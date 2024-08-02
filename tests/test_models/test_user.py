@@ -1,9 +1,11 @@
 from datetime import datetime, timezone
+import copy
+from time import sleep
 
 import pytest
 from sqlalchemy import inspect
 
-from models.user.User import User
+from models.user import User
 from models import storage
 
 
@@ -13,13 +15,15 @@ wrong_arguments_passed = [
             "email": "testing@database.com",
             "department": 20,
             "level": 100,
-            "phone": "+92037264822"}),
+            "phone": "+92037264822",
+            "password": "password"}),
     (User, {"fname": "Testing",
             "lname": "Summon",
             "email": "testing@database.com",
             "department": "ECE",
             "level": "100",
-            "phone": "+92037264822"}),
+            "phone": "+92037264822",
+            "password": "password"}),
 ]
 
 incomplete_arguments_passed = [
@@ -27,33 +31,45 @@ incomplete_arguments_passed = [
             "lname": "Summon",
             "email": "testing@database.com",
             "department": 20,
-            "level": 100}),
+            "level": 100,
+            "password": "password"}),
     (User, {"fname": "Testing",
             "lname": "Summon",
             "email": "testing@database.com",
             "department": 20,
-            "phone": "+92037264822"}),
+            "phone": "+92037264822",
+            "password": "password"}),
     (User, {"fname": "Testing",
             "lname": "Summon",
             "email": "testing@database.com",
             "level": 100,
-            "phone": "+92037264822"}),
+            "phone": "+92037264822",
+            "password": "password"}),
     (User, {"fname": "Testing",
             "lname": "Summon",
             "department": 20,
             "level": 100,
-            "phone": "+92037264822"}),
+            "phone": "+92037264822",
+            "password": "password"}),
     (User, {"fname": "Testing",
             "email": "testing@database.com",
             "department": 20,
             "level": 100,
-            "phone": "+92037264822"}),
+            "phone": "+92037264822",
+            "password": "password"}),
     (User, {
             "lname": "Summon",
             "email": "testing@database.com",
             "department": 20,
             "level": 100,
-            "phone": "+92037264822"}),
+            "phone": "+92037264822",
+            "password": "password"}),
+    (User, {"fname": "Testing",
+            "lname": "Summon",
+            "email": "testing@database.com",
+            "department": "ECE",
+            "level": 100,
+            "phone": "+92037264822"})
 ]
 
 class TestUser:
@@ -64,10 +80,13 @@ class TestUser:
             email="testing@database.com",
             department="ECE",
             level=100,
-            phone="+92037264822"
+            phone="+92037264822",
+            password="password"
         )
+        self.valid_user.save()
 
     def teardown_class(self):
+        storage.close()
         storage.drop_tables()
 
     @pytest.mark.parametrize("func,attrs", incomplete_arguments_passed)
@@ -87,12 +106,17 @@ class TestUser:
         insp = inspect(self.valid_user)
         assert insp.transient is False
 
-    def test_save(self):
-        self.valid_user.save()
+    def test_pasword_pop(self):
+        assert "password" not in self.valid_user.to_dict().keys()
 
     def test_to_dict(self):
-        assert self.valid_user.to_dict() == self.valid_user.__dict__
+        dct = copy.deepcopy(self.valid_user.__dict__)
+        del dct['_sa_instance_state']
+        assert self.valid_user.to_dict(pop=False) == dct
 
     def test_attributes_update(self):
+        prev = self.valid_user.updated_at
+        sleep(1)
         self.valid_user.name = "A new name"
-        assert self.valid_user.updated_at == datetime.now(timezone.utc)
+        self.valid_user.save()
+        assert self.valid_user.updated_at != prev
