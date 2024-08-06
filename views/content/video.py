@@ -1,10 +1,20 @@
+"""
+Flask Blueprint for handling video content from creators
+    :endpoints
+        -   route: /upload
+            function: upload_video
+            description: Describe how the endpoint works
+
+        -   route: ...
+"""
+
+
 from flask import Blueprint, request, jsonify, abort
 from flask_jwt_extended import jwt_required
 
-from googleapiclient.discovery import build
+from models.video import Video
 
-from models.admin.youtube import YoutubeCredentials
-from .decorators import bridge_required, youtube_credentials_required
+from .decorators import bridge_required
 
 bp = Blueprint("video", __name__)
 
@@ -12,27 +22,50 @@ bp = Blueprint("video", __name__)
 @bp.route("/upload", methods=["POST"], strict_slashes=False)
 @jwt_required()
 @bridge_required()
-@youtube_credentials_required()
 def upload_video(**kwargs):
-    YTcredentials = kwargs['YTcredentials']
+    """
+        :params
+            kwargs: a series of keyword arguments coming from the decorators
+                covering the function. See the decorators implementations for
+                more details.
+    """
+    files = request.files
+    form = request.form
 
-    if "video" not in request.files:
+    video = files.get("video", None)
+    thumbnail = files.get("thumbnail")
+
+    title = form.get("title")
+    description = form.get("description")
+
+    if not video or not thumbnail:
         return jsonify({
-            "status": "Failed",
-            "message": "Video not present in request"
+            "status": "Bad Request",
+            "message": "Video/Thumbnail resource not present in body"
         }), 400
-    video = request.files["video"]
+    
+    vid_obj = Video(
+        bridge_id=kwargs["bridge_id"],
+        video=video,
+        title=title,
+        thumbnail=thumbnail,
+        description=description,
+    )
 
-    if video.filename == '':
-        abort(400, "no selected file")
+    vid_obj.save()
+    return jsonify({
+        "status": "Success",
+        "message": "Video Uploaded Successfully",
+    }), 201
 
-    mime_type = video.content_type
-    if not mime_type.startswith('video/') and mime_type != 'application/octet-stream':
-        abort(400, 'Invalid file type')
 
-    with build("youtube", "v3", credentials=YTcredentials) as youtube:
-        
-        channel = youtube.channels().list(mine=True, part='snippet').execute()
+# int main() {
 
-    return jsonify(channel)
+#     goto label;
 
+
+#     # there is a code here
+
+#     label:
+#         # RUN TIS CODE
+# }

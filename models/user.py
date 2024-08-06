@@ -5,7 +5,7 @@ from flask_bcrypt import generate_password_hash
 
 from models.basemodel import BaseModel
 from models.base import Base
-from errors.my_errors import MyValueError
+from errors.error import MyValueError
 
 class User(BaseModel, Base):
     __tablename__ = 'users'

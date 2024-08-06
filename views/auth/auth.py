@@ -4,7 +4,7 @@ from flask_jwt_extended import create_access_token
 from flask_bcrypt import check_password_hash
 
 from models.user import User
-from errors.my_errors import MyValueError
+from errors.error import MyValueError
 
 bp = Blueprint("auth", __name__)
 

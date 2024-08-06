@@ -7,8 +7,19 @@ from sqlalchemy import String, DateTime
 from sqlalchemy.orm import mapped_column
 
 import models
+from lib.error import Error
 
 class BaseModel:
+    """
+    Class:
+        BaseModel: The base class most models will inherit from.
+            It contains most of the methods needed by each database models
+
+        :methods
+            delete: Deletes an object from the current session
+            add: adds an object to the current database session
+            save: persist the object details in the database
+    """
     
     id = mapped_column(String(150), default=str(uuid4()),  primary_key=True, nullable=False)
     created_at = mapped_column(DateTime, default=datetime.now(timezone.utc), nullable=False)
@@ -17,10 +28,31 @@ class BaseModel:
     def __init__(self) -> None:
         pass
 
+    def check_required_keys(self, required_keys, **kwargs):
+        """
+            Checks if the named arguments required by the class
+            are provided accurately
+        """
+        for key in required_keys:
+            if key not in kwargs:
+                return Error(1001, "Required key(s) not present")
+        return True
+
     def delete(self) -> None:
+        """
+            :method
+                delete: deletes or removes an object from the session.
+                        The object row will be deleted from the database
+                        on the next commit or whenever the :method save is
+                        called
+        """
         models.storage.delete(self)
 
     def add(self) -> None:
+        """
+            :method
+                add: j
+        """
         models.storage.new(self)
 
     def save(self) -> None:

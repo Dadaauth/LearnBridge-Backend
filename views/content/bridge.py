@@ -8,7 +8,7 @@ from models.static.image import ImageStatic
 
 from .decorators import bridge_required, user_required
 
-from errors.my_errors import MyValueError
+from errors.error import MyValueError
 
 bp = Blueprint("bridge", __name__)
 
