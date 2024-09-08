@@ -21,12 +21,14 @@ class BaseModel:
             save: persist the object details in the database
     """
     
-    id = mapped_column(String(150), default=str(uuid4()),  primary_key=True, nullable=False)
+    id = mapped_column(String(60), default=str(uuid4()),  primary_key=True, nullable=False)
     created_at = mapped_column(DateTime, default=datetime.now(timezone.utc), nullable=False)
     updated_at = mapped_column(DateTime, default=datetime.now(timezone.utc), nullable=False)
 
     def __init__(self) -> None:
-        pass
+        self.id = str(uuid4())
+        self.created_at = datetime.now(timezone.utc)
+        self.updated_at = datetime.now(timezone.utc)
 
     def check_required_keys(self, required_keys, **kwargs):
         """

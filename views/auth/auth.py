@@ -4,7 +4,7 @@ from flask_jwt_extended import create_access_token
 from flask_bcrypt import check_password_hash
 
 from models.user import User
-from errors.error import MyValueError
+from lib.error import MyValueError
 
 bp = Blueprint("auth", __name__)
 
@@ -13,8 +13,9 @@ bp = Blueprint("auth", __name__)
 def register_new_user():
     try:
         new_user = User(**(request.form))
-        user_dict = new_user.to_dict()
         new_user.save()
+        new_user.refresh()
+        user_dict = new_user.to_dict()
     except (MyValueError) as e:
         if e.error_code == 1001:
             return jsonify({
@@ -23,7 +24,12 @@ def register_new_user():
                 "code": e.error_code
             }), 409
         return {"error": "Invalid request body"}, 400
-    except Exception as e:
+    except (ValueError, TypeError, KeyError):
+        return jsonify({
+            "status": "failed",
+            "error": "An error occured"
+        }), 400
+    except Exception:
         return {"error": "Internal server error"}, 500
     
     token = create_access_token(identity=user_dict)
@@ -37,7 +43,8 @@ def register_new_user():
 
 @bp.route("/user/login", methods=["POST"], strict_slashes=False)
 def login_user():
-    data = request.form
+    data = request.json
+    print(data)
     if data.get("email") is None or data.get("password") is None:
         return jsonify({"status": "failed", "message": "Bad Request"}), 400
 

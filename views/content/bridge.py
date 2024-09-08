@@ -8,8 +8,6 @@ from models.static.image import ImageStatic
 
 from .decorators import bridge_required, user_required
 
-from errors.error import MyValueError
-
 bp = Blueprint("bridge", __name__)
 
 
@@ -58,6 +56,7 @@ def create_bridge(**kwargs):
         "bridge": bridge_dict
     }), 201
     except Exception as e:
+        print(e)
         return jsonify({
             "status": "Error",
             "message": "Internal server error"
@@ -66,6 +65,7 @@ def create_bridge(**kwargs):
 
 @bp.route("/delete", methods=["DELETE"], strict_slashes=False)
 @jwt_required()
+@user_required()
 @bridge_required()
 def delete(**kwargs):
     bridge = kwargs["bridge"]

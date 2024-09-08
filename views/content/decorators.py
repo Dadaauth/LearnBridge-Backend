@@ -7,7 +7,6 @@ from google.oauth2.credentials import Credentials
 
 from models.bridge import Bridge
 from models.user import User
-from models.admin.youtube import YoutubeCredentials
 
 def bridge_required():
     def wrapper(func):
@@ -17,12 +16,20 @@ def bridge_required():
                 "status": "Failed",
                 "message": "You need a Bridge to access this endpoint"
             }), 404
-            
             identity = get_jwt_identity()
-            if not identity["bridge_id"]:
+            user = User.search(id=identity["id"])
+
+            if len(user) == 0:
+                return jsonify({
+                    "status": "Failed",
+                    "message": "You need a valid user account to access this endpoint",
+                }), 404
+            user = user[0]
+
+            if not user.bridge_id:
                 return bridge_not_found
             
-            bridge = Bridge.search(id=identity["bridge_id"])
+            bridge = Bridge.search(id=user.bridge_id)
             if len(bridge) == 0:
                 return bridge_not_found
             kwargs["bridge"] = bridge[0]
@@ -36,7 +43,7 @@ def user_required():
         def decorator(*args, **kwargs):
             try:
                 identity = get_jwt_identity()
-                id = identity['id']
+                id = identity.get("id")
 
                 user = User.search(id=id)
                 if len(user) == 0:
@@ -47,7 +54,8 @@ def user_required():
                 
                 kwargs["user"] = user[0]
                 return func(*args, **kwargs)
-            except:
+            except Exception as e:
+                print("Exception: ", e)
                 return jsonify({
                     "status": "Failed",
                     "message": "Internal server error"

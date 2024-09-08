@@ -14,7 +14,7 @@ from models.article import Article
 from models.video import Video
 from models.static.image import ImageStatic
 from models.static.video import VideoStatic
-from models.admin.youtube import YoutubeCredentials
+
 DB_CONNECTION_STRING = os.environ.get("DB_CONNECTION_STRING")
 DEVELOPMENT = os.getenv("ENVIRONMENT", "production").lower() == 'development'  # True or False
 
