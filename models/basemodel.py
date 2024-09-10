@@ -30,10 +30,23 @@ class BaseModel:
         self.created_at = datetime.now(timezone.utc)
         self.updated_at = datetime.now(timezone.utc)
 
-    def check_required_keys(self, required_keys, **kwargs):
+    def update(self, **kwargs: dict) -> None:
+        """
+            Update a set of attributes in an object.
+            :params
+                @kwargs: a dictionary of attributes
+                        to update
+        """
+        {setattr(self, key, value) for key, value in kwargs.items()}
+
+    def check_required_keys(self, required_keys: list, **kwargs: dict) -> bool:
         """
             Checks if the named arguments required by the class
             are provided accurately
+            :params
+                @required_keys: a list of required keys
+                @kwargs: a dictionary containing the keys
+                    to be tested
         """
         for key in required_keys:
             if key not in kwargs:
@@ -46,7 +59,7 @@ class BaseModel:
                 delete: deletes or removes an object from the session.
                         The object row will be deleted from the database
                         on the next commit or whenever the :method save is
-                        called
+                        called with the delete argument
         """
         models.storage.delete(self)
 
@@ -57,10 +70,11 @@ class BaseModel:
         """
         models.storage.new(self)
 
-    def save(self) -> None:
-        self.updated_at = datetime.now(timezone.utc)
-        models.storage.new(self)
-        models.storage.save()
+    def save(self, delete=False) -> None:
+        if not delete:
+            self.updated_at = datetime.now(timezone.utc)
+            models.storage.new(self)
+        return models.storage.save()
 
     def refresh(self):
         models.storage.refresh(self)

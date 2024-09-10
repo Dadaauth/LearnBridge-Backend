@@ -8,11 +8,10 @@ from dotenv import load_dotenv
 from flask_jwt_extended import JWTManager
 from flask_bcrypt import Bcrypt
 
-from views.auth.auth import bp as auth_bp
-from views.content.bridge import bp as bridge_bp
-from views.content.video import bp as video_bp
+from views.user import bp as user_bp
+from views.users import bp as users_bp
 
-from views.admin.home import bp as admin_home_bp
+from views.video import bp as video_bp
 
 def create_app():
     app = Flask(__name__)
@@ -25,10 +24,8 @@ def create_app():
     jwt = JWTManager(app)
     f_bcrypt = Bcrypt(app)
 
-    app.register_blueprint(auth_bp, url_prefix="/auth")
-    app.register_blueprint(bridge_bp, url_prefix="/bridge")
-    app.register_blueprint(video_bp, url_prefix="/video")
-
-    app.register_blueprint(admin_home_bp, url_prefix="/admin/home")
+    app.register_blueprint(user_bp, url_prefix="/api/user")
+    app.register_blueprint(users_bp, url_prefix="/api/users")
+    app.register_blueprint(video_bp, url_prefix="/api/video")
 
     return app

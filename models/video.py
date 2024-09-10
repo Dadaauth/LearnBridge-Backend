@@ -5,10 +5,7 @@ from sqlalchemy.dialects.mysql import TEXT
 
 from models.basemodel import BaseModel
 from models.base import Base
-from models.static.video import VideoStatic
-from models.static.image import ImageStatic
 
-from lib.error import Error
 
 class Video(BaseModel, Base):
     """

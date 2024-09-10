@@ -9,11 +9,11 @@ from models.base import Base
 # Make sure every ORM mapped model is imported here
 # before calling Base.metadata.create_all()
 from models.user import User
-from models.bridge import Bridge
 from models.article import Article
 from models.video import Video
-from models.static.image import ImageStatic
-from models.static.video import VideoStatic
+from models.comments import VideoComments, ArticleComments
+from models.course import Course
+from models.interaction import ArticleInteraction, VideoInteraction
 
 DB_CONNECTION_STRING = os.environ.get("DB_CONNECTION_STRING")
 DEVELOPMENT = os.getenv("ENVIRONMENT", "production").lower() == 'development'  # True or False
@@ -57,14 +57,21 @@ class DBStorage:
         return [obj for obj in self.__session.scalars(select(cls)).all()]
     
     def search(self, cls, **filters):
-        return [obj for obj in self.__session.scalars(select(cls).filter_by(**filters))]
+        try:
+            sh =  [obj for obj in self.__session.scalars(select(cls).filter_by(**filters))]
+            return sh[0] if len(sh) == 1 else sh if sh > 1 else None
+        except Exception as e:
+            print(e)
+            return None
 
     def save(self) -> None:
         try:
             self.__session.commit()
+            return True
         except Exception as e:
             print("Exception Occured When Saving To DataBase", e)
-            self.__session.rollback
+            self.__session.rollback()
+            return False
 
     def refresh(self, obj) -> None:
         self.__session.refresh(obj)
