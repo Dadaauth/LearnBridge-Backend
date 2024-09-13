@@ -59,7 +59,7 @@ class DBStorage:
     def search(self, cls, **filters):
         try:
             sh =  [obj for obj in self.__session.scalars(select(cls).filter_by(**filters))]
-            return sh[0] if len(sh) == 1 else sh if sh > 1 else None
+            return sh[0] if len(sh) == 1 else sh if len(sh) > 1 else None
         except Exception as e:
             print(e)
             return None

@@ -16,4 +16,10 @@ class Article(BaseModel, Base):
     source_id = mapped_column(ForeignKey("users.id"), nullable=False)
     course_id = mapped_column(ForeignKey("courses.id"), nullable=False)
     
+    def __init__(self, *args, **kwargs):
+        """
+        """
+        super().__init__()
+        [setattr(self, key, value) for key, value in kwargs.items()]
+
     

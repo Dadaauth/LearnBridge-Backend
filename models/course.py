@@ -14,3 +14,9 @@ class Course(BaseModel, Base):
     code = mapped_column(String(45), nullable=False)
     thumbnail = mapped_column(String(300), nullable=True)
     instructor = mapped_column(String(300), nullable=False)
+
+    def __init__(self,*args, **kwargs) -> None:
+        """
+        """
+        super().__init__()
+        [setattr(self, key, value) for key, value in kwargs.items()]

@@ -2,6 +2,7 @@ from werkzeug.datastructures import MultiDict
 from flask import Blueprint, request, jsonify
 
 from models.user import User
+from lib.exceptions import BadRequest, NotFound, Successful
 
 bp = Blueprint("user", __name__)
 
@@ -45,11 +46,7 @@ def user():
         new_user = User(**formData)
         info = new_user.basic_info()
         try:
-            if not new_user.save():
-                return jsonify({
-                    "status": 500,
-                    "message": "Internal Server Error",
-                }), 500
+            if not new_user.save(): raise Exception("Error saving to database")
             return jsonify({
                 "status": 201,
                 "message": "record created successfully",
@@ -65,6 +62,12 @@ def user():
         
     elif request.method == "PATCH":
         params = MultiDict(request.args)
+        if not params.get("user_id"):
+            return jsonify({
+                "status": 400,
+                "message": "Bad request",
+            }), 400
+
         user = User.search(id=params.get("user_id"))
         if not user:
             return jsonify({
@@ -74,7 +77,7 @@ def user():
         del params["user_id"]
         try:
             user.update(**params)
-            user.save()
+            if not user.save(): raise Exception("Error saving to database")
             user.refresh()
             return jsonify({
                 "status": 200,
@@ -92,6 +95,12 @@ def user():
 
     elif request.method == "DELETE":
         params = request.args
+        if not params.get("user_id"):
+            return jsonify({
+                "status": 400,
+                "message": "Bad request",
+            }), 400
+
         user = User.search(id=params.get("user_id"))
         if not user:
             return jsonify({
@@ -100,7 +109,8 @@ def user():
             }), 404
         try:
             user.delete()
-            user.save(delete=True)
+            if not user.save(delete=True):
+                raise Exception("Error saving to database")
             return jsonify({
                 "status": 200,
                 "message": "Record deleted successfully",

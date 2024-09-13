@@ -26,6 +26,8 @@ class User(BaseModel, Base):
 
 
     def __init__(self, *args, **kwargs):
+        """
+        """
         super().__init__()
         # Verify that all required attributes are sent to the class
         # self.check_required_keys(
@@ -38,6 +40,7 @@ class User(BaseModel, Base):
 
     def basic_info(self) -> dict:
         info = {
+            "id": self.id,
             "first_name": self.first_name,
             "last_name": self.last_name,
             "email": self.email,
