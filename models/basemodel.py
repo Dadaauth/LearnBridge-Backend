@@ -7,7 +7,7 @@ from sqlalchemy import String, DateTime
 from sqlalchemy.orm import mapped_column
 
 import models
-from lib.error import Error
+from utils.error import Error
 
 class BaseModel:
     """
@@ -47,6 +47,8 @@ class BaseModel:
                 @required_keys: a list of required keys
                 @kwargs: a dictionary containing the keys
                     to be tested
+
+            @deprecated Use validate_fields function from utils instead
         """
         for key in required_keys:
             if key not in kwargs:

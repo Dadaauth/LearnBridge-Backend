@@ -18,6 +18,7 @@ class Video(BaseModel, Base):
     source_id = mapped_column(ForeignKey("users.id"), nullable=False)
     course_id = mapped_column(ForeignKey("courses.id"), nullable=False)
     object_name = mapped_column(String(60), nullable=False)
+    status = mapped_column(String(60), default="processing", nullable=False)
 
 
     def __init__(self, *args, **kwargs) -> None:
@@ -25,5 +26,4 @@ class Video(BaseModel, Base):
         """
         super().__init__()
         [setattr(self, key, value) for key, value in kwargs.items()]
-        self.source_id = self.user_id
 

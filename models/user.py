@@ -9,6 +9,8 @@ from flask_bcrypt import generate_password_hash
 from models.basemodel import BaseModel
 from models.base import Base
 
+from utils.validate import validate_fields
+
 class User(BaseModel, Base):
     __tablename__ = 'users'
 
@@ -18,8 +20,8 @@ class User(BaseModel, Base):
     level = mapped_column(Integer, nullable=False)
     department = mapped_column(String(300), nullable=False)
     faculty = mapped_column(String(300), nullable=False)
-    dob = mapped_column(Date, nullable=False)
-    phone_calls = mapped_column(String(45), nullable=False)
+    dob = mapped_column(Date, nullable=True)
+    phone_calls = mapped_column(String(45), nullable=True)
     phone_whatsapp = mapped_column(String(45), nullable=True)
     password = mapped_column(MEDIUMTEXT, nullable=False)
     picture = mapped_column(String(300), nullable=True)
@@ -30,13 +32,19 @@ class User(BaseModel, Base):
         """
         super().__init__()
         # Verify that all required attributes are sent to the class
-        # self.check_required_keys(
-        #     [""]
-        # )
+        res = validate_fields(
+            {"first_name", "last_name",
+             "email", "level", "department",
+             "faculty", "password"
+            },
+            kwargs
+        )
+        if not res: raise ValueError("Incomplete fields sent")
+
         [setattr(self, key, value) for key, value in kwargs.items()]
         self.password = generate_password_hash(self.password)
         self.level = int(self.level)
-        self.dob = datetime.strptime(self.dob, "%Y-%m-%d")
+        self.dob = datetime.strptime(self.dob, "%Y-%m-%d") if self.dob else None
 
     def basic_info(self) -> dict:
         info = {

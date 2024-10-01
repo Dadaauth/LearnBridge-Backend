@@ -2,7 +2,7 @@ from flask import Blueprint, request, jsonify
 from werkzeug.datastructures import MultiDict
 
 from models.article import Article
-from lib.exceptions import BadRequest, NotFound, Successful
+from utils.exceptions import BadRequest, NotFound, Successful
 
 bp = Blueprint("article", __name__)
 

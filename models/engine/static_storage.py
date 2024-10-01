@@ -2,12 +2,13 @@ import os
 import subprocess
 from uuid import uuid4
 
-
-UPLOAD_FOLDER = os.getenv("UPLOAD_FOLDER")
+IMAGE_UPLOAD_FOLDER = os.getenv("IMAGE_UPLOAD_FOLDER")
+VIDEO_UPLOAD_FOLDER = os.getenv("VIDEO_UPLOAD_FOLDER")
 DASH_OUTPUT_FOLDER = os.getenv("DASH_OUTPUT_FOLDER")
 
 # Ensure directories exist
-os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+os.makedirs(IMAGE_UPLOAD_FOLDER, exist_ok=True)
+os.makedirs(VIDEO_UPLOAD_FOLDER, exist_ok=True)
 os.makedirs(DASH_OUTPUT_FOLDER, exist_ok=True)
 
 
@@ -15,10 +16,11 @@ class StaticStorage():
     """
     """
 
-    def __init__(self, file, filename=None):
+    def __init__(self, file, upload_folder=None, filename=None):
         self.file = file
         ext = file.filename.split(".", -1)[-1]
         self.filename = f"{str(uuid4())}.{ext}" if not filename else filename
+        self.upload_folder = upload_folder or VIDEO_UPLOAD_FOLDER
 
     def retrieve(self):
         pass
@@ -34,8 +36,15 @@ class StaticStorage():
         """
         """Save the file to a local storage
         before uploading to a remote location"""
-        self.file.save(os.path.join(UPLOAD_FOLDER, self.filename))
+        self.file.save(os.path.join(self.upload_folder, self.filename))
         return self.filename
+
+class ImageStorage(StaticStorage):
+    """
+    """
+
+    def __init__(self, file, filename=None):
+        super().__init__(file, upload_folder=IMAGE_UPLOAD_FOLDER, filename=filename)
 
 
 class VideoStorage(StaticStorage):
@@ -43,7 +52,7 @@ class VideoStorage(StaticStorage):
     """
 
     def __init__(self, file, filename=None):
-        super().__init__(file, filename)
+        super().__init__(file, upload_folder=VIDEO_UPLOAD_FOLDER, filename=filename)
 
     def save(self):
         super().save()
@@ -62,10 +71,11 @@ class VideoStorage(StaticStorage):
         output_mpd = output_folder + f"/{self.filename.rsplit('.', 1)[0]}.mpd"
 
         command = [
-            'ffmpeg', '-i', os.path.join(UPLOAD_FOLDER, self.filename),
+            'ffmpeg', '-i', os.path.join(VIDEO_UPLOAD_FOLDER, self.filename),
             '-map', '0:v', '-map', '0:a',
             '-b:v', '1000k', '-b:a', '128k',
             '-f', 'dash', output_mpd,
         ]
 
         subprocess.run(command, check=True)
+        # Store result to database
