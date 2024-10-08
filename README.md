@@ -155,6 +155,128 @@ Example: /api/user?user_id=123
         }
         ```
 
+  - **POST**: Creates a new user record
+    - form data:
+      - *email*
+      - *first_name*
+      - *last_name*
+      - *level*
+      - *department*
+      - *faculty*
+      - *dob* (optional)
+      - *phone_calls* (optional)
+      - *phone_whatsapp* (optional)
+      - *password*
+      - *picture* (file)
+    - response:
+      - 400 (Bad Request)
+        - if email address is not in the request form
+        - if the user already exists
+
+        ```json
+        {
+            "status": 400,
+            "message": "Bad request",
+            "error": "<specific error>",
+        }
+        ```
+
+      - 201 (Created)
+        - the record was created successfully
+
+        ```json
+        {
+            "status": 201,
+            "message": "record created successfully",
+            "data": {
+                "user": {},
+            },
+        }
+        ```
+
+  - **PATCH**: updates the details of a single user
+    - query parameters:
+      - **Required:**
+      - *user_id*
+      - **Optionals:**
+      - *email*
+      - *first_name*
+      - *last_name*
+      - *level*
+      - *department*
+      - *faculty*
+      - *dob*
+      - *phone_calls*
+      - *phone_whatsapp*
+      - *password*
+    - responses:
+      - 400 (Bad Request)
+        - if user_id is not present in request
+
+        ```json
+        {
+            "status": 400,
+            "message": "Bad request",
+        }
+        ```
+
+      - 404 (Not Found)
+        - if user with *user_id* does not exist
+
+        ```json
+        {
+            "status": 404,
+            "message": "User not found"
+        }
+        ```
+
+      - 200 (OK)
+        - successful
+
+        ```json
+        {
+            "status": 200,
+            "message": "Record updated successfully",
+            "data": {
+                "user": "<basic user info>"
+            }
+        }
+        ```
+
+  - **DELETE**: deletes a user record
+    - query parameters
+      - user_id
+    - responses
+      - 400 (Bad Request)
+        - if user_id is not present in request
+
+        ```json
+        {
+            "status": 400,
+            "message": "Bad request",
+        }
+        ```
+
+      - 404 (Not Found)
+        - if user with *user_id* is not found
+
+        ```json
+        {
+            "status": 404,
+            "message": "User not found"
+        }
+        ```
+
+      - 200 (OK)
+        - successful
+
+        ```json
+        {
+            "status": 200,
+            "message": "Record deleted successfully",
+        }
+        ```
+
 - **/api/users/**
 - **/api/video/**
 - **/api/videos/**
