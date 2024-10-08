@@ -89,3 +89,77 @@ flask --app main run --debug
 - Concerning the automated checking of questions. For something like calculus for examle, there should be a form of visualization that will make you see the result of your work in real time. If you fail in your calculations you should be able to see it, resolve your questions, input your values and check if it will work. It should be like programming where you get instant feedback. The main thing is that it must portray real life scenerios while complementing the lack of real-life scenerious in the education system. For example you might be given a question to solve how to balance a system. THere shouldf be a graphics where you can input your result then the graphics will show the result of your work, e.g. in a building, for civil engineers, if the building will collapse or stand.
 
 ## API DOCUMENTATION
+
+### Routes
+
+### Response Structure
+
+This is how the response for all API call is structured
+
+```json
+{
+    "status": <status_code>,
+    "message": <a message string indicating response>,
+    "data": <object containing data required by the API caller>
+}
+Example: /api/user?user_id=123
+{
+    "status": 200,
+    "message": "Record retrieved Successfully",
+    "data": {
+        "user": {
+            "id": "123",
+            "first_name": "John",
+            "last_name": "Beck"
+        }
+    }
+}
+```
+
+- **/api/user/**
+  - **GET**: retrieve information about a particular user
+    - query parameters:
+      - *level*(optional): level of information required. Default is basic
+      - *user_id*: id of user
+    - response:
+      - 400 (Bad Request)
+        - if user_id is not present in query parameters
+
+        ```json
+        {
+            "status": 400,
+            "message": "Bad request",
+        }
+        ```
+
+      - 404 (Not Found)
+        - if user does not exist
+
+        ```json
+        {
+            "status": 404,
+            "message": "User not found"
+        }
+        ```
+
+      - 200 (Ok)
+        - successful
+
+        ```json
+        {
+            "status": 200,
+            "message": "record retrieved successfully",
+            "data": {
+                "user": {},
+            },
+        }
+        ```
+
+- **/api/users/**
+- **/api/video/**
+- **/api/videos/**
+- **/api/article/**
+- **/api/articles**
+- **/api/course**
+- **/api/courses**
+- **/api/auth**
