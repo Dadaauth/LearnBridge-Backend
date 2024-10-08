@@ -96,9 +96,9 @@ This is how the response for all API call is structured
 
 ```json
 {
-    "status": <status_code>,
-    "message": <a message string indicating response>,
-    "data": <object containing data required by the API caller>
+    "status": "<status_code>",
+    "message": "<a message string indicating response>",
+    "data": "<object containing data required by the API caller>"
 }
 Example: /api/user?user_id=123
 {
