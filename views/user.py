@@ -10,6 +10,7 @@ bp = Blueprint("user", __name__)
 
 @bp.route("/", methods=["GET"], strict_slashes=False)
 def user_get():
+    """Retrieves information about a particular user"""
     params = request.args
     level = params.get("level")
     level = level if level else "basic"
@@ -41,6 +42,8 @@ def user_get():
 
 @bp.route("/", methods=["POST"], strict_slashes=False)
 def user_post():
+    """ Creates a new user
+    """
     try:
         data = MultiDict(request.form)
         # Confirm that the user email does not exist in the database
