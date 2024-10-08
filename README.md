@@ -245,7 +245,7 @@ Example: /api/user?user_id=123
 
   - **DELETE**: deletes a user record
     - query parameters
-      - user_id
+      - *user_id*
     - response(s)
       - 400 (Bad Request)
         - if user_id is not present in request
@@ -293,7 +293,146 @@ Example: /api/user?user_id=123
         }
         ```
 
+- **/api/video/<vid_id>/details/**
+  - **GET**: retrieves the details of a specific video
+    - response(s):
+      - 404 (Not Found)
+        - video with `vid_id` does not exist
+
+        ```json
+        {
+            "status": 404,
+            "message": "Resource not found",
+        }
+        ```
+
+      - 200 (OK)
+        - successful
+
+        ```json
+        {
+            "status": 200,
+            "message": "Resource retrieved successfully",
+            "data": {
+                "video": {}
+            }
+        }
+        ```
+
+- **/api/video/<video_id>/<ob_name>/<path\:filename>/**
+  - **GET**: gets required files for streaming a video
+    - query parameters:
+      - *mpd* (bool):
+        - indicates that an mpd file is required
+        - Use this parameter if you need a link to stream a video in a DASH player
+        - the DASH video player sends a request with this parameter first to get the mpd file then subsequent requests must not contain the mpd parameter
+    - response(s):
+      - an mpd file on first request then the video file segments
+
 - **/api/video/**
+  - **POST**: Creates a new video resource
+    - form data
+      - *video_file* (file) - the stream of video to upload
+      - *thumbnail* (file, optional) - a thumbnail (picture) of the video uploaded
+      - *course_id*
+      - *title*
+      - *description*
+    - response(s):
+      - 400 (Bad Request)
+        - *video_file* is not present in request
+
+        ```json
+        {
+            "status": 400,
+            "message": "Bad request",
+        }
+        ```
+
+      - 200 (OK)
+        - successful
+
+        ```json
+        {
+            "status": 201,
+            "message": "Record created successfully",
+            "data": {
+                "video": {}
+            }
+        }
+        ```
+
+  - **PATCH**: Updates specific details of a video
+    - request parameters
+      - *video_id*
+      - *other fields to update*
+
+    - response(s):
+      - 400 (Bad Request)
+        - video_id is absent in request paramters
+
+        ```json
+        {
+            "status": 400,
+            "message": "Bad request",
+        }
+        ```
+
+      - 404 (Not Found)
+        - video with *video_id* does not exist
+
+        ```json
+        {
+            "status": 404,
+            "message": "Video not found"
+        }
+        ```
+
+      - 200 (OK)
+        - successful
+
+        ```json
+        {
+            "status": 200,
+            "message": "Record updated successfully",
+            "data": {
+                "video": {}
+            }
+        }
+        ```
+
+  - **DELETE**: permanently delete a video resource
+    - query parameter(s):
+      - *video_id*: the *id* of the specific video resource
+    - response(s):
+      - 400 (Bad Request)
+        - *video_id* not present in request parameters
+
+        ```json
+        {
+            "status": 400,
+            "message": "Bad Request",
+        }
+        ```
+
+      - 404 (Not Found)
+        - video resource with *video_id* does not exist
+
+        ```json
+        {
+            "status": 404,
+            "message": "Video not found",
+        }
+        ```
+
+      - 200 (OK)
+
+        ```json
+        {
+            "status": 200,
+            "message": "Record deleted successfully",
+        }
+        ```
+
 - **/api/videos/**
 - **/api/article/**
 - **/api/articles**
