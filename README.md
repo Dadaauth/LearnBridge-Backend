@@ -121,7 +121,7 @@ Example: /api/user?user_id=123
     - query parameters:
       - *level*(optional): level of information required. Default is basic
       - *user_id*: id of user
-    - response:
+    - response(s):
       - 400 (Bad Request)
         - if user_id is not present in query parameters
 
@@ -168,7 +168,7 @@ Example: /api/user?user_id=123
       - *phone_whatsapp* (optional)
       - *password*
       - *picture* (file)
-    - response:
+    - response(s):
       - 400 (Bad Request)
         - if email address is not in the request form
         - if the user already exists
@@ -209,7 +209,7 @@ Example: /api/user?user_id=123
       - *phone_calls*
       - *phone_whatsapp*
       - *password*
-    - responses:
+    - response(s):
       - 400 (Bad Request)
         - if user_id is not present in request
 
@@ -246,7 +246,7 @@ Example: /api/user?user_id=123
   - **DELETE**: deletes a user record
     - query parameters
       - user_id
-    - responses
+    - response(s)
       - 400 (Bad Request)
         - if user_id is not present in request
 
