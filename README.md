@@ -90,8 +90,6 @@ flask --app main run --debug
 
 ## API DOCUMENTATION
 
-### Routes
-
 ### Response Structure
 
 This is how the response for all API call is structured
@@ -115,6 +113,8 @@ Example: /api/user?user_id=123
     }
 }
 ```
+
+### Routes
 
 - **/api/user/**
   - **GET**: retrieve information about a particular user
