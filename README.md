@@ -6,6 +6,7 @@ A tutorial application for kwasu students. LearnBridge means a bridge of learnin
 
 - [Requirements](#requirements)
 - [How to Install](#how-to-install)
+- [Project Structure](#project-structure)
 
 ## Requirements
 
@@ -57,6 +58,25 @@ Run flask server for development
 
 ```shell
 flask --app main run --debug
+```
+
+## Project Structure
+
+```text
+.
+|—— models                              # Database Models
+|   |—— engine                          # storage engine
+|—— static                              # static files
+|—— tests                               # tests
+|—— utils                               # utilities functions
+|—— views                               # flask API routes
+|—— __init__.py
+|—— create_app.py                       # initialize flask app
+|—— main.py                             # program entry point
+|—— populate_db.py
+|—— pytest.ini                          # pytest config file
+|—— README.md                           # Readme documentation
+|__ requirements.txt                    # python requirements
 ```
 
 ## > Features to Implement
