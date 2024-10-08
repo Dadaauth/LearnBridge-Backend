@@ -126,6 +126,7 @@ def user_patch():
 
 @bp.route("/", methods=["DELETE"], strict_slashes=False)
 def user_delete():
+    """Deletes a user record"""
     params = request.args
     if not params.get("user_id"):
         return jsonify({
