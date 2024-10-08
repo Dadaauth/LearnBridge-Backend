@@ -90,6 +90,8 @@ def user_post():
         
 @bp.route("/", methods=["PATCH"], strict_slashes=False)
 def user_patch():
+    """Updates the details of a single user
+    """
     params = MultiDict(request.args)
     if not params.get("user_id"):
         return jsonify({
