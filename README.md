@@ -2,12 +2,62 @@
 
 A tutorial application for kwasu students. LearnBridge means a bridge of learning between students
 
-**NOTE:** Use Flask_SQLAlchemy for database handling instead of plain SQLAlchemy
+## Table Of Contents
+
+- [Requirements](#requirements)
+- [How to Install](#how-to-install)
 
 ## Requirements
 
-* ffmpeg program should be installed on the target machine running the flask server.
-* python packages requirements are listed in the requirements.txt
+- [ffmpeg](https://www.ffmpeg.org/) program must be installed on the target machine running the flask server.
+- python packages requirements are listed in the requirements.txt file
+- Python
+
+## How to Install
+
+Clone to your local machine
+
+```shell
+git clone <repo_url>
+```
+
+change working directory
+
+```shell
+cd <project directory>
+```
+
+create a virtual environment
+
+```shell
+python -m venv .env
+```
+
+activate the virtual environment
+
+for windows:
+
+```shell
+source .env/scripts/activate
+```
+
+for linux
+
+```shell
+
+```
+
+Install Dependencies
+
+```shell
+pip install -r requirements.txt
+```
+
+Run flask server for development
+
+```shell
+flask --app main run --debug
+```
 
 ## > Features to Implement
 
