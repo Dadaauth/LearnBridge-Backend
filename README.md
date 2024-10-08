@@ -7,6 +7,7 @@ A tutorial application for kwasu students. LearnBridge means a bridge of learnin
 - [Requirements](#requirements)
 - [How to Install](#how-to-install)
 - [Project Structure](#project-structure)
+- [Features to Implement](#features-to-implement)
 
 ## Requirements
 
@@ -79,7 +80,7 @@ flask --app main run --debug
 |__ requirements.txt                    # python requirements
 ```
 
-## > Features to Implement
+## Features to Implement
 
 - Students should be able to upload documents then they can ask a reasoning engine questions. Ths will be a feature like when chatGPT is trained on web content and then the propmpters can ask it a lot of questions based on what it has been trained on. A RAG - (Retrieval Augmented Generation), a combination of a generative and retrieval model.
 - You should probably implement your own streaming protocol directly from your servers instead of using cloud storage which has the extra cost of storing your files. If your cloud compute has enough space you can store your videos on it.
