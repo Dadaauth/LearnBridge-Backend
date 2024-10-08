@@ -278,6 +278,21 @@ Example: /api/user?user_id=123
         ```
 
 - **/api/users/**
+  - **GET**: retrieve information about several users
+    - response(s):
+      - 200 (OK)
+        - successful
+
+        ```json
+        {
+            "status": 200,
+            "message": "Records retrieved successfully",
+            "data": {
+                "users": [{}]
+            }
+        }
+        ```
+
 - **/api/video/**
 - **/api/videos/**
 - **/api/article/**
