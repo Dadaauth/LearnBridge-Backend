@@ -8,6 +8,7 @@ A tutorial application for kwasu students. LearnBridge means a bridge of learnin
 - [How to Install](#how-to-install)
 - [Project Structure](#project-structure)
 - [Features to Implement](#features-to-implement)
+- [API Documentation](#api-documentation)
 
 ## Requirements
 
