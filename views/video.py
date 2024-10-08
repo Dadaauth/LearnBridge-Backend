@@ -20,6 +20,7 @@ DASH_OUTPUT_FOLDER = os.getenv("DASH_OUTPUT_FOLDER")
 @bp.route("/<vid_id>/details", strict_slashes=False)
 @jwt_required()
 def get_video_details(vid_id):
+    """Retrieves the details of a specific video"""
     try:
         vid = Video.search(id=vid_id)
         if not vid: raise NotFound
@@ -44,7 +45,7 @@ def get_video_details(vid_id):
 
 @bp.route("/<video_id>/<ob_name>/<path:filename>", methods=["GET"], strict_slashes=False)
 def video_get(video_id, ob_name, filename):
-    """
+    """gets a video for streaming
     """
     try:
         if request.args.get("mpd"):
@@ -119,6 +120,7 @@ def video_post():
 @bp.route("/", methods=["PATCH"], strict_slashes=False)
 @jwt_required()
 def video_patch():
+    """Updates the details of a video"""
     params = MultiDict(request.args)
     if not params.get("video_id"):
         return jsonify({
@@ -156,6 +158,7 @@ def video_patch():
 @bp.route("/", methods=["DELETE"], strict_slashes=False)
 @jwt_required()
 def video_delete():
+    """Permanently deletes a video"""
     vid_id = request.args.get("video_id")
     if not vid_id:
         return jsonify({
